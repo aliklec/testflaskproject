@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Number Generator (using Flask and Render)</title>
+</head>
+<body>
+    <h1>Random Number Generator</h1>
+    <button id="generateBtn">Generate Random Number</button>
+    <p>Random Number: <span id="result"></span></p>
+
+    <script>
+    document.getElementById('generateBtn').addEventListener('click', function() {
+        fetch('/random')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').textContent = data.number;
+            })
+            .catch(error => console.error('Error:', error));
+    });
+    </script>
+</body>
+</html>
