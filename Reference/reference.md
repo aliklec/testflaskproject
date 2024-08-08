@@ -22,10 +22,10 @@ This creates a new project with a virtual environment. A virtual environment is 
 ### 2.1 Install Required Packages
 Open the PyCharm terminal and run:
 ```
-pip install flask gunicorn markdown2
+pip install flask gunicorn
 pip freeze > requirements.txt
 ```
-This installs Flask (our web framework), Gunicorn (a web server), and markdown2 (for rendering Markdown), then saves a list of all installed packages to requirements.txt.
+This installs Flask (our web framework), Gunicorn (a web server), then saves a list of all installed packages to requirements.txt.
 
 ### 2.2 Create Project Structure
 Create the following folders and files in your project:
@@ -38,10 +38,7 @@ project_root/
 │
 ├── templates/
 │   ├── index.html
-│   └── markdown.html
-│
-└── markdown/
-    └── readme.md
+
 ```
 
 ### 2.3 Write Your Application Code
@@ -51,7 +48,6 @@ This is your main application file. It sets up your Flask app and defines the ro
 
 ```python
 from flask import Flask, jsonify, render_template
-import markdown2
 import random
 import os
 
@@ -66,21 +62,14 @@ def get_random_number():
     number = random.randint(1, 100)
     return jsonify({"number": number})
 
-@app.route('/readme')
-def readme():
-    markdown_path = os.path.join(app.root_path, 'markdown', 'readme.md')
-    with open(markdown_path, 'r') as f:
-        content = f.read()
-    html_content = markdown2.markdown(content)
-    return render_template('markdown.html', content=html_content)
 ```
 
 Explanation:
 - We import necessary modules and create a Flask app instance.
-- We define three routes:
+- We define two routes:
   - '/' serves the main page
   - '/random' generates and returns a random number
-  - '/readme' reads and renders the Markdown file
+
 
 #### wsgi.py
 This file is used by Gunicorn to run your application.
@@ -130,48 +119,13 @@ Explanation:
 - This HTML file creates a button and a place to display the random number.
 - The JavaScript code sends a request to the '/random' route when the button is clicked and displays the result.
 
-#### templates/markdown.html
-This template is used to display the rendered Markdown content.
+#### requirements.txt
+To indicate which packages to install
 
 ```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>README</title>
-</head>
-<body>
-    {{ content|safe }}
-</body>
-html
-</html>
-```
-
-Explanation:
-- This template takes the rendered HTML content from the Markdown file and displays it.
-- The `|safe` filter tells Flask not to escape the HTML content.
-
-#### markdown/readme.md
-This is your Markdown readme file.
-
-```markdown
-# Random Number Generator
-
-This is a simple web application that generates random numbers.
-
-## How to Use
-
-1. Click the "Generate Random Number" button.
-2. A random number between 1 and 100 will be displayed.
-
-## Technologies Used
-
-- Flask
-- JavaScript
-- HTML
-
-Enjoy generating random numbers!
+Flask==2.0.3
+httpie==1.0.2
+Werkzeug==2.2.2
 ```
 
 ## 3. Testing Your Application Locally
